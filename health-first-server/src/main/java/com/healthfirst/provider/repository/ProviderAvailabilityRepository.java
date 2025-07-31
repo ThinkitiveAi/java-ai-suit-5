@@ -11,5 +11,6 @@ import java.util.UUID;
 @Repository
 public interface ProviderAvailabilityRepository extends JpaRepository<ProviderAvailability, UUID> {
     List<ProviderAvailability> findByProviderIdAndIsActive(UUID providerId, boolean isActive);
+    List<ProviderAvailability> findByProviderIdAndIsActiveTrue(UUID providerId);
     List<ProviderAvailability> findByProviderIdAndStartDateLessThanEqualAndEndDateGreaterThanEqual(UUID providerId, LocalDate end, LocalDate start);
 } 

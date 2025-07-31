@@ -2,10 +2,14 @@ package com.healthfirst.provider.service;
 
 import com.healthfirst.provider.dto.AvailabilityBlockRequest;
 import com.healthfirst.provider.dto.AppointmentSlotResponse;
+import com.healthfirst.provider.dto.AvailabilityTemplateRequest;
+import com.healthfirst.provider.dto.SlotSearchRequest;
 import com.healthfirst.provider.entity.AppointmentSlot;
 import com.healthfirst.provider.entity.ProviderAvailability;
+import com.healthfirst.provider.entity.AvailabilityTemplate;
 import com.healthfirst.provider.repository.AppointmentSlotRepository;
 import com.healthfirst.provider.repository.ProviderAvailabilityRepository;
+import com.healthfirst.provider.repository.AvailabilityTemplateRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +24,8 @@ public class ProviderAvailabilityService {
     private ProviderAvailabilityRepository availabilityRepository;
     @Autowired
     private AppointmentSlotRepository slotRepository;
+    @Autowired
+    private AvailabilityTemplateRepository templateRepository;
 
     @Transactional
     public List<AppointmentSlotResponse> createAvailabilityBlock(AvailabilityBlockRequest req) {
@@ -47,6 +53,133 @@ public class ProviderAvailabilityService {
             if (overlap) throw new RuntimeException("Overlapping slot detected");
         }
         slotRepository.saveAll(slots);
+        return slots.stream().map(this::toResponse).collect(Collectors.toList());
+    }
+
+    public Map<String, Object> getAvailabilityBlock(UUID availabilityId) {
+        Optional<ProviderAvailability> availability = availabilityRepository.findById(availabilityId);
+        if (availability.isEmpty()) {
+            throw new RuntimeException("Availability not found");
+        }
+        
+        List<AppointmentSlot> slots = slotRepository.findByAvailabilityId(availabilityId);
+        
+        return Map.of(
+            "availability", availability.get(),
+            "slots", slots.stream().map(this::toResponse).collect(Collectors.toList())
+        );
+    }
+
+    public List<Map<String, Object>> getProviderAvailability(UUID providerId, String startDate, String endDate) {
+        List<ProviderAvailability> availabilities = availabilityRepository.findByProviderIdAndIsActiveTrue(providerId);
+        
+        return availabilities.stream().map(availability -> {
+            List<AppointmentSlot> slots = slotRepository.findByAvailabilityId(availability.getId());
+            return Map.of(
+                "availability", availability,
+                "slots", slots.stream().map(this::toResponse).collect(Collectors.toList())
+            );
+        }).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public List<AppointmentSlotResponse> updateAvailabilityBlock(UUID availabilityId, AvailabilityBlockRequest request) {
+        Optional<ProviderAvailability> existing = availabilityRepository.findById(availabilityId);
+        if (existing.isEmpty()) {
+            throw new RuntimeException("Availability not found");
+        }
+        
+        // Delete existing slots
+        slotRepository.deleteByAvailabilityId(availabilityId);
+        
+        // Update availability
+        ProviderAvailability availability = existing.get();
+        availability.setStartDate(request.getStartDate());
+        availability.setEndDate(request.getEndDate());
+        availability.setStartTime(request.getStartTime());
+        availability.setEndTime(request.getEndTime());
+        availability.setTimezone(request.getTimezone());
+        availability.setRecurrenceRule(request.getRecurrenceRule());
+        availability.setSlotDuration(request.getSlotDuration());
+        availability.setBreakDuration(request.getBreakDuration());
+        
+        availability = availabilityRepository.save(availability);
+        
+        // Generate new slots
+        List<AppointmentSlot> slots = generateSlots(availability);
+        slotRepository.saveAll(slots);
+        
+        return slots.stream().map(this::toResponse).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public boolean deleteAvailabilityBlock(UUID availabilityId) {
+        Optional<ProviderAvailability> availability = availabilityRepository.findById(availabilityId);
+        if (availability.isEmpty()) {
+            return false;
+        }
+        
+        // Check if any slots are booked
+        List<AppointmentSlot> bookedSlots = slotRepository.findByAvailabilityIdAndStatus(availabilityId, AppointmentSlot.SlotStatus.BOOKED);
+        if (!bookedSlots.isEmpty()) {
+            return false; // Cannot delete if slots are booked
+        }
+        
+        // Soft delete slots
+        List<AppointmentSlot> allSlots = slotRepository.findByAvailabilityId(availabilityId);
+        allSlots.forEach(slot -> slot.setSoftDeleted(true));
+        slotRepository.saveAll(allSlots);
+        
+        // Deactivate availability
+        ProviderAvailability av = availability.get();
+        av.setActive(false);
+        availabilityRepository.save(av);
+        
+        return true;
+    }
+
+    public List<List<AppointmentSlotResponse>> createBulkAvailability(List<AvailabilityBlockRequest> requests) {
+        return requests.stream()
+                .map(this::createAvailabilityBlock)
+                .collect(Collectors.toList());
+    }
+
+    public Map<String, Object> createAvailabilityTemplate(AvailabilityTemplateRequest request) {
+        AvailabilityTemplate template = AvailabilityTemplate.builder()
+                .providerId(UUID.fromString(request.getProviderId()))
+                .name(request.getName())
+                .daysOfWeek(request.getDaysOfWeek())
+                .startTime(request.getStartTime())
+                .endTime(request.getEndTime())
+                .slotDuration(request.getSlotDuration())
+                .breakDuration(request.getBreakDuration())
+                .timezone(request.getTimezone())
+                .recurrenceRule(request.getRecurrenceRule())
+                .build();
+        
+        template = templateRepository.save(template);
+        
+        return Map.of(
+            "id", template.getId(),
+            "name", template.getName(),
+            "message", "Template created successfully"
+        );
+    }
+
+    public List<AvailabilityTemplate> getAvailabilityTemplates(UUID providerId) {
+        return templateRepository.findByProviderId(providerId);
+    }
+
+    public List<AppointmentSlotResponse> searchAvailableSlots(SlotSearchRequest request) {
+        // Search for available slots based on criteria
+        List<AppointmentSlot> slots = slotRepository.findAvailableSlotsByCriteria(
+                request.getSpecialization(),
+                request.getLocationType(),
+                request.getStart().toString(),
+                request.getEnd().toString(),
+                request.getAppointmentType()
+        );
+        
         return slots.stream().map(this::toResponse).collect(Collectors.toList());
     }
 

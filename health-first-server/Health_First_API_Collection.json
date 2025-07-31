@@ -1,0 +1,448 @@
+{
+  "info": {
+    "name": "Health First API Collection",
+    "description": "Complete API collection for Health First healthcare backend",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Provider Registration",
+      "item": [
+        {
+          "name": "Register Provider",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"John\",\n  \"last_name\": \"Doe\",\n  \"email\": \"john.doe@clinic.com\",\n  \"phone_number\": \"+1234567890\",\n  \"password\": \"SecurePassword123!\",\n  \"confirm_password\": \"SecurePassword123!\",\n  \"specialization\": \"Cardiology\",\n  \"license_number\": \"MD123456789\",\n  \"years_of_experience\": 10,\n  \"clinic_address\": {\n    \"street\": \"123 Medical Center Dr\",\n    \"city\": \"New York\",\n    \"state\": \"NY\",\n    \"zip\": \"10001\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/provider/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "provider", "register"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Provider Login",
+      "item": [
+        {
+          "name": "Login Provider",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identifier\": \"john.doe@clinic.com\",\n  \"password\": \"SecurePassword123!\",\n  \"remember_me\": false\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/provider/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "provider", "login"]
+            }
+          }
+        },
+        {
+          "name": "Refresh Provider Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refresh_token\": \"{{provider_refresh_token}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/provider/refresh",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "provider", "refresh"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Patient Registration",
+      "item": [
+        {
+          "name": "Register Patient",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"Jane\",\n  \"last_name\": \"Smith\",\n  \"email\": \"jane.smith@email.com\",\n  \"phone_number\": \"+1987654321\",\n  \"password\": \"PatientPass123!\",\n  \"confirm_password\": \"PatientPass123!\",\n  \"date_of_birth\": \"1990-05-15\",\n  \"gender\": \"Female\",\n  \"address\": {\n    \"street\": \"456 Health Ave\",\n    \"city\": \"Boston\",\n    \"state\": \"MA\",\n    \"zip\": \"02101\"\n  },\n  \"emergency_contact\": {\n    \"name\": \"John Smith\",\n    \"phone\": \"+1555123456\",\n    \"relationship\": \"Spouse\"\n  },\n  \"medical_history\": [\"Hypertension\", \"Diabetes\"],\n  \"insurance_info\": {\n    \"provider\": \"Blue Cross Blue Shield\",\n    \"policy_number\": \"BCBS123456\"\n  },\n  \"marketing_opt_in\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/patient/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "patient", "register"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Patient Login",
+      "item": [
+        {
+          "name": "Login Patient",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identifier\": \"jane.smith@email.com\",\n  \"password\": \"PatientPass123!\",\n  \"remember_me\": false,\n  \"device_info\": \"Chrome on Windows\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/patient/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "patient", "login"]
+            }
+          }
+        },
+        {
+          "name": "Refresh Patient Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refresh_token\": \"{{patient_refresh_token}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/patient/refresh",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "patient", "refresh"]
+            }
+          }
+        },
+        {
+          "name": "Logout Patient",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refresh_token\": \"{{patient_refresh_token}}\",\n  \"patient_id\": \"{{patient_id}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/patient/logout",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "patient", "logout"]
+            }
+          }
+        },
+        {
+          "name": "Logout All Patient Sessions",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"password\": \"PatientPass123!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/patient/logout-all",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "patient", "logout-all"]
+            }
+          }
+        },
+        {
+          "name": "Get Patient Sessions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/patient/sessions?patientId={{patient_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "patient", "sessions"],
+              "query": [
+                {
+                  "key": "patientId",
+                  "value": "{{patient_id}}"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Revoke Patient Session",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/patient/sessions/{{session_id}}?patientId={{patient_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "patient", "sessions", "{{session_id}}"],
+              "query": [
+                {
+                  "key": "patientId",
+                  "value": "{{patient_id}}"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Provider Availability Management",
+      "item": [
+        {
+          "name": "Create Availability Block",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"provider_id\": \"{{provider_id}}\",\n  \"start_date\": \"2024-01-15\",\n  \"end_date\": \"2024-01-20\",\n  \"start_time\": \"09:00:00\",\n  \"end_time\": \"17:00:00\",\n  \"timezone\": \"America/New_York\",\n  \"recurrence_rule\": \"FREQ=DAILY\",\n  \"slot_duration\": 30,\n  \"break_duration\": 15\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/provider/availability",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "provider", "availability"]
+            }
+          }
+        },
+        {
+          "name": "Get Availability Block",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/provider/availability/{{availability_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "provider", "availability", "{{availability_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Get Provider Availability",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/provider/availability?providerId={{provider_id}}&startDate=2024-01-01&endDate=2024-01-31",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "provider", "availability"],
+              "query": [
+                {
+                  "key": "providerId",
+                  "value": "{{provider_id}}"
+                },
+                {
+                  "key": "startDate",
+                  "value": "2024-01-01"
+                },
+                {
+                  "key": "endDate",
+                  "value": "2024-01-31"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Availability Block",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"provider_id\": \"{{provider_id}}\",\n  \"start_date\": \"2024-01-15\",\n  \"end_date\": \"2024-01-25\",\n  \"start_time\": \"10:00:00\",\n  \"end_time\": \"18:00:00\",\n  \"timezone\": \"America/New_York\",\n  \"recurrence_rule\": \"FREQ=DAILY\",\n  \"slot_duration\": 45,\n  \"break_duration\": 15\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/provider/availability/{{availability_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "provider", "availability", "{{availability_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete Availability Block",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/provider/availability/{{availability_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "provider", "availability", "{{availability_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Create Bulk Availability",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "[\n  {\n    \"provider_id\": \"{{provider_id}}\",\n    \"start_date\": \"2024-01-15\",\n    \"end_date\": \"2024-01-20\",\n    \"start_time\": \"09:00:00\",\n    \"end_time\": \"17:00:00\",\n    \"timezone\": \"America/New_York\",\n    \"slot_duration\": 30,\n    \"break_duration\": 15\n  },\n  {\n    \"provider_id\": \"{{provider_id}}\",\n    \"start_date\": \"2024-01-22\",\n    \"end_date\": \"2024-01-27\",\n    \"start_time\": \"10:00:00\",\n    \"end_time\": \"18:00:00\",\n    \"timezone\": \"America/New_York\",\n    \"slot_duration\": 45,\n    \"break_duration\": 15\n  }\n]"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/provider/availability/bulk",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "provider", "availability", "bulk"]
+            }
+          }
+        },
+        {
+          "name": "Create Availability Template",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"provider_id\": \"{{provider_id}}\",\n  \"name\": \"Weekday Schedule\",\n  \"days_of_week\": \"MON,TUE,WED,THU,FRI\",\n  \"start_time\": \"09:00:00\",\n  \"end_time\": \"17:00:00\",\n  \"slot_duration\": 30,\n  \"break_duration\": 15,\n  \"timezone\": \"America/New_York\",\n  \"recurrence_rule\": \"FREQ=WEEKLY\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/provider/availability/templates",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "provider", "availability", "templates"]
+            }
+          }
+        },
+        {
+          "name": "Get Availability Templates",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/provider/availability/templates?providerId={{provider_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "provider", "availability", "templates"],
+              "query": [
+                {
+                  "key": "providerId",
+                  "value": "{{provider_id}}"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Search Available Slots",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"start\": \"2024-01-15T09:00:00Z\",\n  \"end\": \"2024-01-20T17:00:00Z\",\n  \"specialization\": \"Cardiology\",\n  \"location_type\": \"CLINIC\",\n  \"appointment_type\": \"CONSULTATION\",\n  \"insurance\": \"Blue Cross Blue Shield\",\n  \"min_price\": 50.0,\n  \"max_price\": 200.0\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/provider/availability/search",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "provider", "availability", "search"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8088",
+      "type": "string"
+    },
+    {
+      "key": "provider_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "patient_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "provider_refresh_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "patient_refresh_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "availability_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "session_id",
+      "value": "",
+      "type": "string"
+    }
+  ]
+} 
