@@ -1,0 +1,24 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: solution-dev
+    password: Solution@2024#
+    driver-class-name: org.postgresql.Driver
+  liquibase:
+    enabled: false
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+server:
+  port: 8088
+
+springdoc:
+  swagger-ui:
+    path: /api/master/swagger-ui.html
+#  api-docs:
+#    path: /api/master/api-docs
+#  show-actuator: false 
