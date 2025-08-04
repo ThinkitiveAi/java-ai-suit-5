@@ -45,7 +45,8 @@ public class ProviderController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody ProviderLoginRequest request, HttpServletRequest httpRequest) {
         String ip = httpRequest.getRemoteAddr();
-        ProviderLoginResponse response = providerLoginService.login(request, ip);
+        String userAgent = httpRequest.getHeader("User-Agent");
+        ProviderLoginResponse response = providerLoginService.login(request, ip, userAgent);
         if (!response.isSuccess()) {
             if ("ACCOUNT_LOCKED".equals(response.getErrorCode())) {
                 return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(response);

@@ -14,11 +14,19 @@ public class PatientLoginResponse {
     private String message;
     private String errorCode;
     private Data data;
+    
+    public boolean isSuccess() {
+        return success;
+    }
+    
+    public String getErrorCode() {
+        return errorCode;
+    }
 
-    @Data
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
+    @lombok.Data
+    @lombok.Builder
+    @lombok.NoArgsConstructor
+    @lombok.AllArgsConstructor
     public static class Data {
         private String accessToken;
         private String refreshToken;
@@ -27,10 +35,10 @@ public class PatientLoginResponse {
         private PatientInfo patient;
     }
 
-    @Data
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
+    @lombok.Data
+    @lombok.Builder
+    @lombok.NoArgsConstructor
+    @lombok.AllArgsConstructor
     public static class PatientInfo {
         private String id;
         private String firstName;

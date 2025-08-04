@@ -13,6 +13,10 @@ public class PatientRegistrationResponse {
     private boolean success;
     private String message;
     private Data data;
+    
+    public boolean isSuccess() {
+        return success;
+    }
 
     @lombok.Data
     @Builder
