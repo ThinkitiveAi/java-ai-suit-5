@@ -38,7 +38,7 @@ public class PatientController {
     private static final long WINDOW_MILLIS = 60 * 60 * 1000; // 1 hour
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerPatient(@Valid @RequestBody PatientRegistrationRequest request, HttpServletRequest httpRequest) {
+    public ResponseEntity<?> registerPatient(@RequestBody PatientRegistrationRequest request, HttpServletRequest httpRequest) {
         String ip = httpRequest.getRemoteAddr();
         long now = System.currentTimeMillis();
         lastAttempt.putIfAbsent(ip, now);
@@ -60,7 +60,7 @@ public class PatientController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody PatientLoginRequest request, HttpServletRequest httpRequest) {
+    public ResponseEntity<?> login(@RequestBody PatientLoginRequest request, HttpServletRequest httpRequest) {
         String ip = httpRequest.getRemoteAddr();
         String userAgent = httpRequest.getHeader("User-Agent");
         

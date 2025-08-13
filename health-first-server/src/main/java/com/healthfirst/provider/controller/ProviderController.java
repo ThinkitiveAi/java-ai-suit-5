@@ -26,7 +26,7 @@ public class ProviderController {
     private RateLimiter rateLimiter;
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerProvider(@Valid @RequestBody ProviderRegistrationRequest request, HttpServletRequest httpRequest) {
+    public ResponseEntity<?> registerProvider(@RequestBody ProviderRegistrationRequest request, HttpServletRequest httpRequest) {
         String ip = httpRequest.getRemoteAddr();
         if (!rateLimiter.isAllowed(ip)) {
             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
@@ -43,7 +43,7 @@ public class ProviderController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody ProviderLoginRequest request, HttpServletRequest httpRequest) {
+    public ResponseEntity<?> login(@RequestBody ProviderLoginRequest request, HttpServletRequest httpRequest) {
         String ip = httpRequest.getRemoteAddr();
         String userAgent = httpRequest.getHeader("User-Agent");
         ProviderLoginResponse response = providerLoginService.login(request, ip, userAgent);

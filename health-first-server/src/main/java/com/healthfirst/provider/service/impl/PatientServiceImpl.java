@@ -48,6 +48,7 @@ public class PatientServiceImpl implements PatientService {
             req.getInsuranceInfo().setPolicyNumber(trim(req.getInsuranceInfo().getPolicyNumber()));
         }
         
+        /*
         // Validate age
         if (!isValidAge(req.getDateOfBirth())) {
             return PatientRegistrationResponse.builder()
@@ -85,6 +86,7 @@ public class PatientServiceImpl implements PatientService {
                     .message("Passwords do not match.")
                     .build();
         }
+        */
         
         // Hash password
         String passwordHash = PasswordUtils.hashPassword(req.getPassword());

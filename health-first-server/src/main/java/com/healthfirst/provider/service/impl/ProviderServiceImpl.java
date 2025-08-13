@@ -28,6 +28,7 @@ public class ProviderServiceImpl implements ProviderService {
     public ProviderRegistrationResponse registerProvider(ProviderRegistrationRequest req, String ip) {
         req = validationService.trimAndSanitize(req);
         
+        /*
         // Validate specialization
         if (!validationService.isValidSpecialization(req.getSpecialization())) {
             return ProviderRegistrationResponse.builder()
@@ -84,6 +85,7 @@ public class ProviderServiceImpl implements ProviderService {
                     .message("License number already registered.")
                     .build();
         }
+        */
         
         // Hash password
         String passwordHash = PasswordUtils.hashPassword(req.getPassword());
@@ -98,12 +100,12 @@ public class ProviderServiceImpl implements ProviderService {
                 .specialization(req.getSpecialization())
                 .licenseNumber(req.getLicenseNumber())
                 .yearsOfExperience(req.getYearsOfExperience())
-                .clinicAddress(new Provider.ClinicAddress(
+                .clinicAddress(req.getClinicAddress() != null ? new Provider.ClinicAddress(
                         req.getClinicAddress().getStreet(),
                         req.getClinicAddress().getCity(),
                         req.getClinicAddress().getState(),
                         req.getClinicAddress().getZip()
-                ))
+                ) : null)
                 .verificationStatus(Provider.VerificationStatus.PENDING)
                 .isActive(true)
                 .build();
