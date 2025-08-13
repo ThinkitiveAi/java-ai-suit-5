@@ -51,6 +51,18 @@ public class ProviderServiceImpl implements ProviderService {
                     .build();
         }
         
+        // Clinic address required and fields non-empty
+        if (req.getClinicAddress() == null
+                || isBlank(req.getClinicAddress().getStreet())
+                || isBlank(req.getClinicAddress().getCity())
+                || isBlank(req.getClinicAddress().getState())
+                || isBlank(req.getClinicAddress().getZip())) {
+            return ProviderRegistrationResponse.builder()
+                    .success(false)
+                    .message("Clinic address is required with street, city, state, and zip.")
+                    .build();
+        }
+        
         // Check for duplicates
         if (providerRepository.findByEmail(req.getEmail()).isPresent()) {
             return ProviderRegistrationResponse.builder()
@@ -111,5 +123,9 @@ public class ProviderServiceImpl implements ProviderService {
                         .verificationStatus(provider.getVerificationStatus().name().toLowerCase())
                         .build())
                 .build();
+    }
+
+    private boolean isBlank(String s) {
+        return s == null || s.trim().isEmpty();
     }
 } 
