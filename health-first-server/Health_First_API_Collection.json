@@ -28,6 +28,27 @@
               "path": ["api", "v1", "provider", "register"]
             }
           }
+        },
+        {
+          "name": "Verify Provider (Testing)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john.doe@clinic.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/provider/test/verify",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "provider", "test", "verify"]
+            }
+          }
         }
       ]
     },
@@ -182,7 +203,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"password\": \"PatientPass123!\"\n}"
+              "raw": "{\n  \"refresh_token\": \"{{patient_refresh_token}}\",\n  \"patient_id\": \"{{patient_id}}\",\n  \"password\": \"PatientPass123!\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/v1/patient/logout-all",
