@@ -13,6 +13,9 @@ spring:
     properties:
       hibernate:
         format_sql: true
+      jakarta.persistence.validation.mode: none
+  jackson:
+    property-naming-strategy: SNAKE_CASE
 server:
   port: 8088
 

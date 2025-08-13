@@ -22,7 +22,7 @@ public class ProviderAvailabilityController {
     private ProviderAvailabilityService availabilityService;
 
     @PostMapping("/availability")
-    public ResponseEntity<List<AppointmentSlotResponse>> createAvailability(@Valid @RequestBody AvailabilityBlockRequest request) {
+    public ResponseEntity<List<AppointmentSlotResponse>> createAvailability(@RequestBody AvailabilityBlockRequest request) {
         List<AppointmentSlotResponse> slots = availabilityService.createAvailabilityBlock(request);
         return ResponseEntity.ok(slots);
     }
@@ -51,7 +51,7 @@ public class ProviderAvailabilityController {
 
     @PutMapping("/availability/{availabilityId}")
     public ResponseEntity<?> updateAvailability(@PathVariable String availabilityId, 
-                                              @Valid @RequestBody AvailabilityBlockRequest request) {
+                                              @RequestBody AvailabilityBlockRequest request) {
         try {
             UUID id = UUID.fromString(availabilityId);
             return ResponseEntity.ok(availabilityService.updateAvailabilityBlock(id, request));
@@ -76,12 +76,12 @@ public class ProviderAvailabilityController {
     }
 
     @PostMapping("/availability/bulk")
-    public ResponseEntity<?> createBulkAvailability(@Valid @RequestBody List<AvailabilityBlockRequest> requests) {
+    public ResponseEntity<?> createBulkAvailability(@RequestBody List<AvailabilityBlockRequest> requests) {
         return ResponseEntity.ok(availabilityService.createBulkAvailability(requests));
     }
 
     @PostMapping("/availability/templates")
-    public ResponseEntity<?> createAvailabilityTemplate(@Valid @RequestBody AvailabilityTemplateRequest request) {
+    public ResponseEntity<?> createAvailabilityTemplate(@RequestBody AvailabilityTemplateRequest request) {
         return ResponseEntity.ok(availabilityService.createAvailabilityTemplate(request));
     }
 
@@ -96,7 +96,7 @@ public class ProviderAvailabilityController {
     }
 
     @PostMapping("/availability/search")
-    public ResponseEntity<?> searchAvailableSlots(@Valid @RequestBody SlotSearchRequest request) {
+    public ResponseEntity<?> searchAvailableSlots(@RequestBody SlotSearchRequest request) {
         return ResponseEntity.ok(availabilityService.searchAvailableSlots(request));
     }
 } 

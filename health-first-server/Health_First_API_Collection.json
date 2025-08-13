@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "Health First API Collection",
-    "description": "Complete API collection for Health First healthcare backend",
+    "description": "Complete API collection for Health First healthcare backend. All request bodies accept snake_case JSON keys (configured via spring.jackson.property-naming-strategy=SNAKE_CASE).",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
@@ -26,6 +26,27 @@
               "raw": "{{base_url}}/api/v1/provider/register",
               "host": ["{{base_url}}"],
               "path": ["api", "v1", "provider", "register"]
+            }
+          }
+        },
+        {
+          "name": "Verify Provider (Testing)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john.doe@clinic.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/provider/test/verify",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "provider", "test", "verify"]
             }
           }
         }
@@ -182,7 +203,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"patient_id\": \"{{patient_id}}\",\n  \"password\": \"PatientPass123!\"\n}"
+              "raw": "{\n  \"refresh_token\": \"{{patient_refresh_token}}\",\n  \"patient_id\": \"{{patient_id}}\",\n  \"password\": \"PatientPass123!\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/v1/patient/logout-all",
@@ -244,7 +265,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"provider_id\": \"{{provider_id}}\",\n  \"start_date\": \"2024-01-15\",\n  \"end_date\": \"2024-01-20\",\n  \"start_time\": \"09:00:00\",\n  \"end_time\": \"17:00:00\",\n  \"timezone\": \"America/New_York\",\n  \"recurrence_rule\": \"FREQ=DAILY\",\n  \"slot_duration\": 30,\n  \"break_duration\": 15\n}"
+              "raw": "[\n  {\n    \"provider_id\": \"{{provider_id}}\",\n    \"start_date\": \"2024-01-15\",\n    \"end_date\": \"2024-01-20\",\n    \"start_time\": \"09:00:00\",\n    \"end_time\": \"17:00:00\",\n    \"timezone\": \"America/New_York\",\n    \"recurrence_rule\": \"FREQ=DAILY\",\n    \"slot_duration\": 30,\n    \"break_duration\": 15\n  }\n]"
             },
             "url": {
               "raw": "{{base_url}}/api/v1/provider/availability",
@@ -275,18 +296,9 @@
               "host": ["{{base_url}}"],
               "path": ["api", "v1", "provider", "availability"],
               "query": [
-                {
-                  "key": "providerId",
-                  "value": "{{provider_id}}"
-                },
-                {
-                  "key": "startDate",
-                  "value": "2024-01-01"
-                },
-                {
-                  "key": "endDate",
-                  "value": "2024-01-31"
-                }
+                { "key": "providerId", "value": "{{provider_id}}" },
+                { "key": "startDate", "value": "2024-01-01" },
+                { "key": "endDate", "value": "2024-01-31" }
               ]
             }
           }
@@ -296,10 +308,7 @@
           "request": {
             "method": "PUT",
             "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
+              { "key": "Content-Type", "value": "application/json" }
             ],
             "body": {
               "mode": "raw",
@@ -329,14 +338,11 @@
           "request": {
             "method": "POST",
             "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
+              { "key": "Content-Type", "value": "application/json" }
             ],
             "body": {
               "mode": "raw",
-              "raw": "[\n  {\n    \"provider_id\": \"{{provider_id}}\",\n    \"start_date\": \"2024-01-15\",\n    \"end_date\": \"2024-01-20\",\n    \"start_time\": \"09:00:00\",\n    \"end_time\": \"17:00:00\",\n    \"timezone\": \"America/New_York\",\n    \"slot_duration\": 30,\n    \"break_duration\": 15\n  },\n  {\n    \"provider_id\": \"{{provider_id}}\",\n    \"start_date\": \"2024-01-22\",\n    \"end_date\": \"2024-01-27\",\n    \"start_time\": \"10:00:00\",\n    \"end_time\": \"18:00:00\",\n    \"timezone\": \"America/New_York\",\n    \"slot_duration\": 45,\n    \"break_duration\": 15\n  }\n]"
+              "raw": "[\n  {\n    \"provider_id\": \"{{provider_id}}\",\n    \"start_date\": \"2024-01-15\",\n    \"end_date\": \"2024-01-20\",\n    \"start_time\": \"09:00:00\",\n    \"end_time\": \"17:00:00\",\n    \"timezone\": \"America/New_York\",\n    \"recurrence_rule\": \"FREQ=DAILY\",\n    \"slot_duration\": 30,\n    \"break_duration\": 15\n  }\n]"
             },
             "url": {
               "raw": "{{base_url}}/api/v1/provider/availability/bulk",
@@ -349,12 +355,7 @@
           "name": "Create Availability Template",
           "request": {
             "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"provider_id\": \"{{provider_id}}\",\n  \"name\": \"Weekday Schedule\",\n  \"days_of_week\": \"MON,TUE,WED,THU,FRI\",\n  \"start_time\": \"09:00:00\",\n  \"end_time\": \"17:00:00\",\n  \"slot_duration\": 30,\n  \"break_duration\": 15,\n  \"timezone\": \"America/New_York\",\n  \"recurrence_rule\": \"FREQ=WEEKLY\"\n}"
@@ -375,12 +376,7 @@
               "raw": "{{base_url}}/api/v1/provider/availability/templates?providerId={{provider_id}}",
               "host": ["{{base_url}}"],
               "path": ["api", "v1", "provider", "availability", "templates"],
-              "query": [
-                {
-                  "key": "providerId",
-                  "value": "{{provider_id}}"
-                }
-              ]
+              "query": [ { "key": "providerId", "value": "{{provider_id}}" } ]
             }
           }
         },
@@ -388,12 +384,7 @@
           "name": "Search Available Slots",
           "request": {
             "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"start\": \"2024-01-15T09:00:00Z\",\n  \"end\": \"2024-01-20T17:00:00Z\",\n  \"specialization\": \"Cardiology\",\n  \"location_type\": \"CLINIC\",\n  \"appointment_type\": \"CONSULTATION\",\n  \"insurance\": \"Blue Cross Blue Shield\",\n  \"min_price\": 50.0,\n  \"max_price\": 200.0\n}"
@@ -409,40 +400,12 @@
     }
   ],
   "variable": [
-    {
-      "key": "base_url",
-      "value": "http://localhost:8088",
-      "type": "string"
-    },
-    {
-      "key": "provider_id",
-      "value": "",
-      "type": "string"
-    },
-    {
-      "key": "patient_id",
-      "value": "",
-      "type": "string"
-    },
-    {
-      "key": "provider_refresh_token",
-      "value": "",
-      "type": "string"
-    },
-    {
-      "key": "patient_refresh_token",
-      "value": "",
-      "type": "string"
-    },
-    {
-      "key": "availability_id",
-      "value": "",
-      "type": "string"
-    },
-    {
-      "key": "session_id",
-      "value": "",
-      "type": "string"
-    }
+    { "key": "base_url", "value": "http://localhost:8088", "type": "string" },
+    { "key": "provider_id", "value": "", "type": "string" },
+    { "key": "patient_id", "value": "", "type": "string" },
+    { "key": "provider_refresh_token", "value": "", "type": "string" },
+    { "key": "patient_refresh_token", "value": "", "type": "string" },
+    { "key": "availability_id", "value": "", "type": "string" },
+    { "key": "session_id", "value": "", "type": "string" }
   ]
 } 

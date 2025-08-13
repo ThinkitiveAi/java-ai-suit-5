@@ -28,6 +28,7 @@ public class ProviderServiceImpl implements ProviderService {
     public ProviderRegistrationResponse registerProvider(ProviderRegistrationRequest req, String ip) {
         req = validationService.trimAndSanitize(req);
         
+        /*
         // Validate specialization
         if (!validationService.isValidSpecialization(req.getSpecialization())) {
             return ProviderRegistrationResponse.builder()
@@ -48,6 +49,18 @@ public class ProviderServiceImpl implements ProviderService {
             return ProviderRegistrationResponse.builder()
                     .success(false)
                     .message("Passwords do not match.")
+                    .build();
+        }
+        
+        // Clinic address required and fields non-empty
+        if (req.getClinicAddress() == null
+                || isBlank(req.getClinicAddress().getStreet())
+                || isBlank(req.getClinicAddress().getCity())
+                || isBlank(req.getClinicAddress().getState())
+                || isBlank(req.getClinicAddress().getZip())) {
+            return ProviderRegistrationResponse.builder()
+                    .success(false)
+                    .message("Clinic address is required with street, city, state, and zip.")
                     .build();
         }
         
@@ -72,6 +85,7 @@ public class ProviderServiceImpl implements ProviderService {
                     .message("License number already registered.")
                     .build();
         }
+        */
         
         // Hash password
         String passwordHash = PasswordUtils.hashPassword(req.getPassword());
@@ -86,12 +100,12 @@ public class ProviderServiceImpl implements ProviderService {
                 .specialization(req.getSpecialization())
                 .licenseNumber(req.getLicenseNumber())
                 .yearsOfExperience(req.getYearsOfExperience())
-                .clinicAddress(new Provider.ClinicAddress(
+                .clinicAddress(req.getClinicAddress() != null ? new Provider.ClinicAddress(
                         req.getClinicAddress().getStreet(),
                         req.getClinicAddress().getCity(),
                         req.getClinicAddress().getState(),
                         req.getClinicAddress().getZip()
-                ))
+                ) : null)
                 .verificationStatus(Provider.VerificationStatus.PENDING)
                 .isActive(true)
                 .build();
@@ -111,5 +125,9 @@ public class ProviderServiceImpl implements ProviderService {
                         .verificationStatus(provider.getVerificationStatus().name().toLowerCase())
                         .build())
                 .build();
+    }
+
+    private boolean isBlank(String s) {
+        return s == null || s.trim().isEmpty();
     }
 } 

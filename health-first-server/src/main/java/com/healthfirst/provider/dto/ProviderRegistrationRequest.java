@@ -42,16 +42,21 @@ public class ProviderRegistrationRequest {
     private int yearsOfExperience;
 
     @Valid
+    @NotNull
     private ClinicAddress clinicAddress;
 
     @Data
     public static class ClinicAddress {
+        @NotBlank
         @Size(max = 200)
         private String street;
+        @NotBlank
         @Size(max = 100)
         private String city;
+        @NotBlank
         @Size(max = 50)
         private String state;
+        @NotBlank
         @Size(max = 20)
         private String zip;
     }
